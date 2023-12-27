@@ -5,8 +5,8 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # Every 7 days at 2:47 UTC (a rather off-peak time, globally)
-    - cron: '47 2 */7 * *'
+    # Roughly every 7 days at 2:47 UTC (a rather off-peak time, globally)
+    - cron: '47 2 7,14,21,28 * *'
   workflow_dispatch:
 jobs:
   integration:
