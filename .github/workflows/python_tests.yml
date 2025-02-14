@@ -4,13 +4,13 @@
 name: Python_tests
 on:
   push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
   schedule:
     # Roughly every 7 days at 2:47 UTC (a rather off-peak time, globally)
     - cron: '47 2 7,14,21,28 * *'
   workflow_dispatch:
+
 jobs:
   Python_tests:
     runs-on: ${{ matrix.os }}
@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       max-parallel: 5
       matrix:
-        os: [macos-13, macos-14, macos-latest, ubuntu-latest] # , windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+        os: [macos-13, macos-latest, ubuntu-latest] # , windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -27,14 +27,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-      - uses: seanmiddleditch/gha-setup-ninja@v4
+      - uses: seanmiddleditch/gha-setup-ninja@v6
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools
+          python -m pip install --upgrade pip
           pip install --editable ".[dev]"
       - run: ./gyp -V && ./gyp --version && gyp -V && gyp --version
       - name: Lint with ruff  # See pyproject.toml for settings
-        run: ruff --output-format=github .
+        uses: astral-sh/ruff-action@v3
       - name: Test with pytest  # See pyproject.toml for settings
         run: pytest
       # - name: Run doctests with pytest
